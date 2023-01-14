@@ -1,38 +1,21 @@
-import * as React from "react"
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+import {Box, ChakraProvider, theme} from "@chakra-ui/react"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { useSessionStorage } from "usehooks-ts"
+import Token from "./pages/Token"
+import Home from "./pages/Home"
+import StorageExamples from "./pages/StorageExamples"
 
-export const App = () => (
-  <ChakraProvider theme={theme}>
-    <Box textAlign="center" fontSize="xl">
-      <Grid minH="100vh" p={3}>
-        <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Logo h="40vmin" pointerEvents="none" />
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-          </Text>
-          <Link
-            color="teal.500"
-            href="https://chakra-ui.com"
-            fontSize="2xl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Chakra
-          </Link>
-        </VStack>
-      </Grid>
-    </Box>
-  </ChakraProvider>
-)
+export const App = () => {
+    
+    const [token, setToken] = useSessionStorage("token", undefined);
+
+    const storage = {path:"/storage", element:<StorageExamples/>}
+    const tokenTest = {path:"/token", element:<Token/>}
+    const home = {path:"/", element:<Home/>}
+    const router = createBrowserRouter([storage, tokenTest, home]);
+    return <ChakraProvider theme={theme}>
+      <Box mx="auto" w="90%" mt="5%">
+        <RouterProvider router={router}/>
+      </Box>
+    </ChakraProvider>
+  }
